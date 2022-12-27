@@ -7,7 +7,7 @@ function cf7mollie_paymentchoice_shortcode_handler( $tag ) {
 	//Load Mollie
 	require_once __DIR__ . '/initialize.php';
     $wpcf7 = WPCF7_ContactForm::get_current();
-    $formid = $wpcf7->id;
+    $formid = $wpcf7->id();
     cf7_mollie_setapikey($formid);
     $mollie = $GLOBALS['mollie'];
 
@@ -56,6 +56,7 @@ function cf7mollie_paymentchoice_shortcode_handler( $tag ) {
 	
 	//See if payment is a first, recurring or an oneoff 
 	$options = $tag->options;
+	$default_choice = 1;
 	foreach($options as $item) {
 		if (strpos($item, 'paymenttype:') !== false) {
 			$paymenttype = str_replace('paymenttype:',"",$item);
@@ -182,15 +183,40 @@ function cf7mollie_paymentchoice_shortcode_handler( $tag ) {
 	return $html;
 }
 
-add_filter( 'wpcf7_validate_paymentchoice','wpcf7_checkbox_validation_filter', 10, 2 );
+/* add_filter( 'wpcf7_validate_paymentchoice','wpcf7_checkbox_validation_filter', 10, 2 );
 add_filter( 'wpcf7_validate_paymentchoice*','wpcf7_checkbox_validation_filter', 10, 2 );
+function cf7mollie_checkbox_validation_filter( $result, $tag ) {
+	$name = $tag->name;
+
+	$value = isset( $_POST[$name] )
+		? trim( strtr( (string) $_POST[$name], "\n", " " ) )
+		: '';
+
+	$value = str_replace(",",".",$value);
+
+	$min = $tag->get_option( 'min', 'signed_int', true );
+	$max = $tag->get_option( 'max', 'signed_int', true );
+
+	if ( $tag->is_required() && '' == $value ) {
+		$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
+	} elseif ( '' != $value && ! is_numeric( $value ) ) {
+		$result->invalidate( $tag, wpcf7_get_message( 'invalid_number' ) );
+	} elseif ( '' != $value && '' != $min && (float) $value < (float) $min ) {
+		$result->invalidate( $tag, wpcf7_get_message( 'number_too_small' ) );
+	} elseif ( '' != $value && '' != $max && (float) $max < (float) $value ) {
+		$result->invalidate( $tag, wpcf7_get_message( 'number_too_large' ) );
+	}
+
+	return $result;
+} */
 
 function cf7mollie_tag_generator_payment( $contact_form, $args = '' ) {
 	$args = wp_parse_args( $args, array() );
 	$type = 'radio';
 
 	$description = __( "Generate radio buttons to select a paymentmethod. You can add extra options as well, these will be placed at the bottom of the list. To set up a recurring payment the client has to do an initial payment. The form needs to have an 'name' and a 'email' field. Optionally you add a field with a namme containing the word 'frequency' containing numbers. That will be the frequency in months. Optionally you can add a date field with 'chargedate' in its name that will be the startdate. If you only have one recurring payment option, you do not have to add the 'Payment option field - recurring' just the 'payment option - first is sufficient.'");
-
+	$desc_link = wpcf7_link( __( 'https://wordpress.org/plugins/cf7-conditional-fields/', 'cf7-mollie'), __( 'conditional fields', 'cf7-mollie-translation' ) );
+	
 	?>
 	<div class="control-box">
 		<fieldset>

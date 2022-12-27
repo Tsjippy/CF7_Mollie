@@ -2,10 +2,11 @@
 /*
 Plugin Name: Contact Form 7 - Mollie extension
 Description: Include Mollie payments in your CF7 form
-Version: 4.7.4
+Version: 5.0.0
 Author: Ewald Harmsen
 Text Domain: cf7-mollie-translation
 Domain Path: /includes/lang
+Tested up to: 6.2
 */
 
 require __DIR__ . '/includes/php/form_tab.php';
@@ -81,10 +82,6 @@ function cf7mollie_enqueue_backend() {
 	wp_register_style( 'cf7-mollie-style', (plugins_url()) . '/cf7-mollie/includes/css/cf7-mollie-admin.css', false, '1.0.0', 'all');
 	wp_enqueue_style( 'cf7-mollie-style' );
 }
-
-//Allow the use of AJAX for both logged-in and non-logged-in users
-add_action ( 'wp_ajax_nopriv_getCheckOutURL', 'cf7_mollie_payment_handler' );
-add_action ( 'wp_ajax_getCheckOutURL', 'cf7_mollie_payment_handler' );
 
 /**
  * Verify Contact Form 7 dependencies.

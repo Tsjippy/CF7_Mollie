@@ -2,18 +2,18 @@
 /*
  * Make sure to disable the display of errors in production code!
  */
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
-
-require_once __DIR__. '/../libs/mollie-api-php/vendor/autoload.php';
+require_once __DIR__. '/../libs/vendor/autoload.php';
 
 /*
  * Initialize the Mollie API library with your API key.
  *
  * See: https://www.mollie.com/dashboard/developers/api-keys
  */
-$GLOBALS['mollie'] = new \Mollie\Api\MollieApiClient();
+try{
+	$GLOBALS['mollie'] = new \Mollie\Api\MollieApiClient();
+}catch (\Error $e) {
+	error_log( "Activation failed, please disable all other plugins except cf7 and try again.");
+}
 
 
 if (!function_exists('cf7_mollie_setapikey')) {

@@ -30,7 +30,7 @@ function cf7mollie_amount_shortcode_handler ($tag){
         require_once __DIR__ . '/initialize.php';
 
         $wpcf7 = WPCF7_ContactForm::get_current();
-        $formid = $wpcf7->id;
+        $formid = $wpcf7->id();
         cf7_mollie_setapikey($formid);
 
         $atts = array();
@@ -122,13 +122,12 @@ function cf7mollie_amount_validation_filter( $result, $tag ) {
 /* Messages */
 
 add_filter( 'wpcf7_messages', 'cf7mollie_amount_messages' );
-
 function cf7mollie_amount_messages( $messages ) {
 	return array_merge( $messages, array(
 		'invalid_number2' => array(
 			'description' => __( "Number format that the sender entered is invalid", 'contact-form-7' ),
-			//'default' => __( "The number format is invalid.2", 'contact-form-7' )
-			'default' => $_POST[$name]
+			'default' => __( "The number format is invalid.2", 'contact-form-7' )
+			//'default' => $_POST[$name]
 		),
 
 		'number_too_small2' => array(
@@ -149,6 +148,7 @@ function cf7mollie_tag_generator_amount( $contact_form, $args = '' ) {
     $type = 'amount';
 
     $description = __( "Generate a form-tag for a field where users can fill in their amount.", 'cf7-mollie-translation' );
+    $desc_link = wpcf7_link( __( 'https://wordpress.org/plugins/cf7-conditional-fields/', 'cf7-mollie'), __( 'conditional fields', 'cf7-mollie-translation' ) );
 
 ?>
 <div class="control-box">

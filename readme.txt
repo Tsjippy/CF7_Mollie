@@ -3,7 +3,7 @@ Tags: contact form 7 mollie, PayPal, iDeal, payment form, Mollie, donate, donati
 Contributors: tsjippy
 Requires at least: 4.0.0
 Requires PHP: 5.2.4
-Tested up to: 5.3.1
+Tested up to: 5.6.1
 Stable tag: 1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -170,6 +170,14 @@ Payments are already stored in the Mollie system, this is just a payment plugin,
 5. Bank choice field
 
 == Changelog ==
+= 4.9.0 =
+* Library update to 2.29.0
+* Activation bug fix
+
+= 4.8.0 =
+* Library update to 2.24.0
+* Contact Form 7 update
+
 = 4.7.4 =
 * Now possible to search in table 
 

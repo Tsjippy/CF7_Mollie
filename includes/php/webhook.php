@@ -32,9 +32,9 @@ function cf7_mollie_payment_status(){
 		}
 		
 		if ($order_id != ""){
-			cf7_mollie_subscribe($order_id);
+			cf7_mollie_subscribe($order_id, $amount);
 			$query = "SELECT * FROM {$table_name} WHERE orderid = '{$order_id}'";
-			$result = json_decode(json_encode($wpdb->get_results($query)), True);
+			$result = json_decode(json_encode($wpdb->get_results($query)), true);
 		
 			if ($result[0]['name']==""){
 				$name = $consumer_name;
@@ -47,10 +47,10 @@ function cf7_mollie_payment_status(){
 		
 		//Only import if not yet in database
 		if (empty($result)){
-			$wpdb->insert( 
+			$wpdb->insert(
 				$table_name,
-				array( 
-					'time' => current_time( 'mysql' ), 
+				array(
+					'time' => current_time( 'mysql' ),
 					'paymentid' => "{$paymentid}",
 					'orderid' => "{$order_id}",
 					'amount' => "{$amount}",
@@ -69,10 +69,10 @@ function cf7_mollie_payment_status(){
 			}
 		}
 	}else{
-		$wpdb->insert( 
+		$wpdb->insert(
 				$table_name,
-				array( 
-					'time' => current_time( 'mysql' ), 
+				array(
+					'time' => current_time( 'mysql' ),
 					'paymentid' => "",
 					'orderid' => "",
 					'amount' => "",
@@ -85,7 +85,7 @@ function cf7_mollie_payment_status(){
 	}
 }
 
-function cf7_mollie_subscribe($order_id){
+function cf7_mollie_subscribe($order_id, $amount){
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'cf7_mollie';
 	cf7_mollie_setapikey();
@@ -96,10 +96,21 @@ function cf7_mollie_subscribe($order_id){
 		 * Create a subscription based on the first payment
 		 */
 		$query = "SELECT * FROM {$table_name} WHERE `orderid` =".$order_id;
-		$result = json_decode(json_encode($wpdb->get_results($query)), True);
+		$result = json_decode(json_encode($wpdb->get_results($query)), true);
 		
 		if ($result[0]['subscriptionid']=="recurring"){
 			$customer_id = $result[0]['customerid'];
+
+			$wpcf7 = WPCF7_ContactForm::get_current();
+    		$formid = $wpcf7->id();
+
+			$protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
+    		$hostname = $_SERVER['HTTP_HOST'];
+    		$path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+
+			$webhookUrl	= "{$protocol}://{$hostname}{$path}/webhook.php";
+			error_log($result);
+			error_log($webhookUrl);
 			if ($amount == 0){
 				$amount = $result[0]['amount'];
 			}

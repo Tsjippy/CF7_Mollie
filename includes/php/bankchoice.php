@@ -4,7 +4,7 @@ function cf7mollie_bankchoice_shortcode_handler ($tag){
     require_once __DIR__ . '/initialize.php';
 
     $wpcf7 = WPCF7_ContactForm::get_current();
-    $formid = $wpcf7->id;
+    $formid = $wpcf7->id();
     
     cf7_mollie_setapikey($formid);
     $mollie = $GLOBALS['mollie'];
