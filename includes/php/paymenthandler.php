@@ -44,14 +44,14 @@ function cf7_mollie_payment_handler () {
 	if (get_post_meta( $formid, "CF7_mollie_redirecturl",true) && get_post_meta( $formid, "CF7_mollie_redirecturl",true) != ""){
 		$redirectBaseUrl 	= get_post_meta( $formid, "CF7_mollie_redirecturl",true);
 		$home 				= home_url();
-		if (strpos($redirectBaseUrl, $home) !== false) {
+		if (strpos($redirectBaseUrl, $home) === false) {
 			$redirectBaseUrl = $home.$redirectBaseUrl;
 		}
     }else{
         $redirectBaseUrl = $webhookUrl;
     }
 
-    if (strpos($redirectBaseUrl, '?') !== false){
+    if (strpos($redirectBaseUrl, '?') === false){
         $redirectUrl	= $redirectBaseUrl."?order_id={$order_id}";
     }else{
         $redirectUrl	= $redirectBaseUrl."&order_id={$order_id}";
